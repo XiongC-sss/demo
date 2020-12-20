@@ -48,6 +48,7 @@ export default class LeftContent extends Vue {
         &.active-item{
           color: #0084ff;
         }
+        cursor: pointer;
         height: 58px;
         line-height: 58px;
         margin-left: 22px;

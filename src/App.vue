@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <my-header></my-header>
-    <home></home>
+    <transition>
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import MyHeader from '@/components/MyHeader.vue'
-import Home from '@/views/Home.vue'
 @Component({
   components: {
-    MyHeader,
-    Home
+    MyHeader
   }
 })
 export default class App extends Vue {

@@ -3,10 +3,10 @@
     <div class="head-box">
       <span class="demo-name">益乎</span>
       <div class="my-tabs">
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'home'}]" @click="setActiveTab('home')">首页</div>
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'vip'}]" @click="setActiveTab('vip')">会员</div>
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'find'}]" @click="setActiveTab('find')">发现</div>
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'wait'}]" @click="setActiveTab('wait')">等你来答</div>
+        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Home'}]" @click="toOtherPage('Home')">首页</div>
+        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Vip'}]" @click="setActiveTab('Vip')">会员</div>
+        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Find'}]" @click="toOtherPage('Find')">发现</div>
+        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Wait'}]" @click="setActiveTab('Wait')">等你来答</div>
       </div>
       <el-select v-model="keyword" filterable>
         <el-option
@@ -16,7 +16,7 @@
           :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" @click="toSearch"><span class="search-img"></span></el-button>
+      <el-button type="primary"><span class="search-img"></span></el-button>
       <div class="right-box">
         <img class="right-img" src="../assets/img/inform.png" alt="">
         <img class="right-img" src="../assets/img/message.png" alt="">
@@ -33,7 +33,6 @@ import { SetActiveTab } from '@/store/type'
 
 @Component
 export default class Header extends Vue {
-  activeName = 'first'
   keyword = ''
   options = [{
     value: '选项1',
@@ -57,18 +56,19 @@ export default class Header extends Vue {
   @Mutation setActiveTab: SetActiveTab | undefined
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  toSearch () {
+  toOtherPage (name: string) {
+    this.setActiveTab && this.setActiveTab(name)
+    this.$router.push({ name })
   }
 }
 </script>
 
 <style lang="scss" module>
 .warp{
-  position: fixed;
+  position: sticky;
   width: 100%;
   height: 50px;
   top: 0;
-  left: 0;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(18,18,18,.1);
   :global{
@@ -80,7 +80,6 @@ export default class Header extends Vue {
       overflow: hidden;
       display: flex;
       align-items: center;
-      padding: 0 20px;
       .demo-name{
         padding: 5px 0 10px;
         font-size: 26px;
@@ -132,7 +131,7 @@ export default class Header extends Vue {
       }
       .right-box{
         width: 200px;
-        margin-left: 54px;
+        margin-left: 106px;
         img{
           vertical-align: middle;
           margin-left: 40px;

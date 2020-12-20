@@ -5,7 +5,7 @@
       <div class="small-img-wrp">
         <img :class="{'small-img': true}" :src="paper.img_url" alt="">
       </div>
-      <div :class="{'small-text': true}">{{paper.zhaiyao}}~接口返回的文字较少，~~~下面请大家用普通念出
+      <div :class="{'small-text': true}">{{paper.zhaiyao}}~接口返回的文字较少，~~~
         改革春风吹满地
         吹满地
         春风吹满地
@@ -16,7 +16,8 @@
         耗子都给猫当伴娘
         齐德隆
         齐东强
-        齐德隆的咚得隆咚锵</div>
+        齐德隆的咚得隆咚锵
+        咚得隆咚锵咚得隆咚锵</div>
     </div>
     <div class="paper-info" v-if="showInfo">
       <div class="info-img-wrp">
@@ -26,7 +27,7 @@
     </div>
     <div class="operation">
       <div class="operation-content">
-        <div class="good"><i class="mdi mdi-thumb-up"></i> {{paper.click}} 赞</div>
+        <div class="good" @click="paper.click += 1"><i class="mdi mdi-thumb-up"></i> {{paper.click}} 赞</div>
         <div class="bad"><i class="mdi mdi-thumb-down"></i> 踩</div>
         <div class="operation-item"><i class="mdi mdi-message" style="font-size: 12px"></i> 评论</div>
         <div class="operation-item"><i class="mdi mdi-share" style="font-size: 16px"></i> 分享</div>
@@ -55,13 +56,10 @@ export default class Paper extends Vue {
   }
 
   openInfo () {
-    this.scrollTop = window.scrollY
-    console.log(this.scrollTop, '---------------------------')
+    if (!this.showInfo) this.scrollTop = window.scrollY || window.pageYOffset
     this.showInfo = !this.showInfo
-    !this.showInfo && this.$nextTick(() => {
-      window.scrollTo(0, this.scrollTop)
-    })
-    this.paper && this.showInfo && this.$axios.get(`api/getnew/${this.paper.id}`).then(res => {
+    !this.showInfo && window.scrollTo(0, this.scrollTop)
+    this.showInfo && this.$axios.get(`api/getnew/${this.paper && this.paper.id}`).then(res => {
       this.paperInfo = res.data.message[0]
     })
   }
@@ -131,6 +129,10 @@ export default class Paper extends Vue {
           color: #0084ff;
           &.bad{
             margin-left: 10px;
+          }
+          &:hover{
+            background-color: #0084ff;
+            color: #fff;
           }
         }
         .operation-item{

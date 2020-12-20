@@ -23,7 +23,7 @@ export default class Home extends Vue {}
 .home{
   width: 1000px;
   overflow-y: auto ;
-  margin: 60px auto 0;
+  margin: 10px auto;
   display: flex;
   justify-content: space-between;
 }
