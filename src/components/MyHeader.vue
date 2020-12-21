@@ -16,7 +16,7 @@
           :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary"><span class="search-img"></span></el-button>
+      <el-button type="primary" @click="search"><span class="search-img"></span></el-button>
       <div class="right-box">
         <img class="right-img" src="../assets/img/inform.png" alt="">
         <img class="right-img" src="../assets/img/message.png" alt="">
@@ -29,36 +29,42 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Mutation, Getter } from 'vuex-class'
-import { SetActiveTab } from '@/store/type'
+import { SetFunc } from '@/store/type'
 
 @Component
 export default class Header extends Vue {
   keyword = ''
   options = [{
-    value: '选项1',
-    label: '黄金糕'
+    value: 1,
+    label: '第1条'
   }, {
-    value: '选项2',
-    label: '双皮奶'
+    value: 10,
+    label: '前10条'
   }, {
-    value: '选项3',
-    label: '蚵仔煎'
+    value: 3,
+    label: '前3条'
   }, {
-    value: '选项4',
-    label: '龙须面'
+    value: 4,
+    label: '前4条'
   }, {
-    value: '选项5',
-    label: '北京烤鸭'
+    value: 5,
+    label: '前5条'
   }]
 
-  @Getter activeTab: string | undefined
+  @Getter activeTab?: string
+  @Getter total?: number
 
-  @Mutation setActiveTab: SetActiveTab | undefined
+  @Mutation setActiveTab?: SetFunc
+  @Mutation setTotal?: SetFunc
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   toOtherPage (name: string) {
     this.setActiveTab && this.setActiveTab(name)
     this.$router.push({ name })
+  }
+
+  search () {
+    this.setTotal && this.setTotal(this.keyword)
+    console.log(this.total)
   }
 }
 </script>

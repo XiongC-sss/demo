@@ -1,3 +1,3 @@
-export interface SetActiveTab {
-  (value: string): void
+export interface SetFunc {
+  (value: string): void;
 }

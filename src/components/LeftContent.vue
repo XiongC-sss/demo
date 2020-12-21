@@ -7,7 +7,7 @@
     </div>
     <div class="left-main">
       <paper
-        v-for="paper in paperList"
+        v-for="paper in showList"
         :key="paper.id"
         :paper="paper"></paper>
     </div>
@@ -15,9 +15,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import Paper from '@/components/Paper.vue'
-import { PaperItem } from '@/types/index'
+import { PaperItem } from '@/types'
+import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -26,9 +27,18 @@ import { PaperItem } from '@/types/index'
 })
 export default class LeftContent extends Vue {
   paperList: PaperItem[] = []
+  showList: PaperItem[] = []
+
+  @Getter total?: number
+
+  @Watch('total', { immediate: true })
+  totalChange (newVal: number) {
+    this.showList = this.paperList.slice(0, newVal)
+  }
+
   created () {
     this.$axios.get('api/getnewslist').then(res => {
-      this.paperList = res.data.message
+      this.showList = this.paperList = res.data.message
     })
   }
 }
