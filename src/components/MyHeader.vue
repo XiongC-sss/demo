@@ -3,12 +3,18 @@
     <div class="head-box">
       <span class="demo-name">益乎</span>
       <div class="my-tabs">
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Home'}]" @click="toOtherPage('Home')">首页</div>
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Vip'}]" @click="setActiveTab('Vip')">会员</div>
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Find'}]" @click="toOtherPage('Find')">发现</div>
-        <div :class="['my-tabs-item', {'active-tab': activeTab === 'Wait'}]" @click="setActiveTab('Wait')">等你来答</div>
+        <div :class="['my-tabs-item', {'active-tab': $route.name === 'Home'}]" @click="toOtherPage('Home')">首页</div>
+        <div :class="['my-tabs-item', {'active-tab': $route.name === 'Vip'}]" >会员</div>
+        <div :class="['my-tabs-item', {'active-tab': $route.name === 'Find'}]" @click="toOtherPage('Find')">发现</div>
+        <div :class="['my-tabs-item', {'active-tab': $route.name === 'Wait'}]" >等你来答</div>
       </div>
-      <el-select v-model="keyword" filterable>
+      <el-select
+        v-model="query"
+        filterable
+        remote
+        reserve-keyword
+        placeholder="请输入关键词"
+        :remote-method="getOptions">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -16,7 +22,7 @@
           :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" @click="search"><span class="search-img"></span></el-button>
+      <el-button type="primary" @click="setKeyword(query)"><span class="search-img"></span></el-button>
       <div class="right-box">
         <img class="right-img" src="../assets/img/inform.png" alt="">
         <img class="right-img" src="../assets/img/message.png" alt="">
@@ -33,38 +39,24 @@ import { SetFunc } from '@/store/type'
 
 @Component
 export default class Header extends Vue {
-  keyword = ''
-  options = [{
-    value: 1,
-    label: '第1条'
-  }, {
-    value: 10,
-    label: '前10条'
-  }, {
-    value: 3,
-    label: '前3条'
-  }, {
-    value: 4,
-    label: '前4条'
-  }, {
-    value: 5,
-    label: '前5条'
-  }]
+  query = ''
+  options = []
 
   @Getter activeTab?: string
   @Getter total?: number
 
   @Mutation setActiveTab?: SetFunc
-  @Mutation setTotal?: SetFunc
+  @Mutation setKeyword?: SetFunc
 
   toOtherPage (name: string) {
-    this.setActiveTab && this.setActiveTab(name)
     this.$router.push({ name })
   }
 
-  search () {
-    this.setTotal && this.setTotal(this.keyword)
-    console.log(this.total)
+  getOptions (query: string) {
+    this.$axios.get('api/getsearchword', { params: { word: query } })
+      .then(res => {
+        this.options = res.data.message
+      }).catch(err => this.$message.error(err.data.message))
   }
 }
 </script>

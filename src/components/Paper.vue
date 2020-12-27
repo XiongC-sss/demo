@@ -61,7 +61,7 @@ export default class Paper extends Vue {
     !this.showInfo && window.scrollTo(0, this.scrollTop)
     this.showInfo && this.$axios.get(`api/getnew/${this.paper && this.paper.id}`).then(res => {
       this.paperInfo = res.data.message[0]
-    })
+    }).catch(err => this.$message.error(err.data.message))
   }
 }
 </script>

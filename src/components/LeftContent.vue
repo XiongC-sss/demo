@@ -7,7 +7,7 @@
     </div>
     <div class="left-main">
       <paper
-        v-for="paper in showList"
+        v-for="paper in paperList"
         :key="paper.id"
         :paper="paper"></paper>
     </div>
@@ -27,19 +27,52 @@ import { Getter } from 'vuex-class'
 })
 export default class LeftContent extends Vue {
   paperList: PaperItem[] = []
-  showList: PaperItem[] = []
+  getFlag = true
+  loading = false
 
-  @Getter total?: number
+  @Getter keyword?: string
 
-  @Watch('total', { immediate: true })
-  totalChange (newVal: number) {
-    this.showList = this.paperList.slice(0, newVal)
+  @Watch('keyword')
+  keywordChange () {
+    this.getFlag = true
+    this.paperList = []
+    this.getList()
   }
 
   created () {
-    this.$axios.get('api/getnewslist').then(res => {
-      this.showList = this.paperList = res.data.message
-    })
+    this.getList()
+  }
+
+  mounted () {
+    window.addEventListener('scroll', this.loadData)
+  }
+
+  destroyed () {
+    window.removeEventListener('scroll', this.loadData)
+  }
+
+  // 滚动加载
+  loadData () {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    const windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+    scrollTop + windowHeight + 50 >= scrollHeight && this.getList()
+  }
+
+  getList () {
+    if (!this.getFlag || this.loading) return
+    this.loading = true
+    const params = {
+      type: 'home',
+      limit: 5,
+      word: this.keyword,
+      lastId: this.paperList[this.paperList.length - 1] ? this.paperList[this.paperList.length - 1].id : 0
+    }
+    this.$axios.get('api/getnewslist', { params }).then(res => {
+      const list = res.data.message
+      this.getFlag = list.length > 0
+      this.paperList = [...this.paperList, ...list]
+    }).catch(err => console.log(err)).finally(() => { this.loading = false })
   }
 }
 

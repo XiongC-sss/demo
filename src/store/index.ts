@@ -5,20 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    activeTab: 'Home',
-    total: 10
+    keyword: ''
   },
   mutations: {
-    setActiveTab (state, value) {
-      state.activeTab = value
-    },
-    setTotal (state, value) {
-      state.total = value
+    setKeyword (state, value) {
+      state.keyword = value
     }
   },
   getters: {
-    activeTab: state => state.activeTab,
-    total: state => state.total
+    keyword: state => state.keyword
   },
   actions: {
   },
