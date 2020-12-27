@@ -59,6 +59,7 @@ export default class LeftContent extends Vue {
     scrollTop + windowHeight + 50 >= scrollHeight && this.getList()
   }
 
+  // 获取数据
   getList () {
     if (!this.getFlag || this.loading) return
     this.loading = true
@@ -72,7 +73,7 @@ export default class LeftContent extends Vue {
       const list = res.data.message
       this.getFlag = list.length > 0
       this.paperList = [...this.paperList, ...list]
-    }).catch(err => console.log(err)).finally(() => { this.loading = false })
+    }).catch(err => this.$message.error(err)).finally(() => this.$nextTick(() => { this.loading = false }))
   }
 }
 
